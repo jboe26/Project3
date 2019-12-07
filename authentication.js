@@ -1,28 +1,30 @@
-var provider = new firebase.auth.FacebookAuthProvider();
-
-provider.addScope('user_birthday');
-
-firebase.auth().languageCode = 'fr_FR';
-// To apply the default browser preference instead of explicitly setting it.
-// firebase.auth().useDeviceLanguage();
-
-firebase.auth().signInWithPopup(provider).then(function(result) {
-    // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-    var token = result.credential.accessToken;
-    // The signed-in user info.
-    var user = result.user;
-    // ...
-  }).catch(function(error) {
+  firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
     // Handle Errors here.
     var errorCode = error.code;
     var errorMessage = error.message;
-    // The email of the user's account used.
-    var email = error.email;
-    // The firebase.auth.AuthCredential type that was used.
-    var credential = error.credential;
     // ...
-  });
+  })
 
-  firebase.auth().signInWithRedirect(provider);
+  firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    // ...
+  })
 
-  
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      // User is signed in.
+      var userName = user.userName;
+      var email = user.email;
+      var emailVerified = user.emailVerified;
+      var uid = user.uid;
+      var providerData = user.providerData;
+      // ...
+    } else {
+      // User is signed out.
+      
+    }
+  })
+
+
