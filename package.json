@@ -1,0 +1,24 @@
+{
+  "name": "project3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "authentication.js",
+  "dependencies": {
+    "firebase": "^7.5.2",
+    "firebaseui": "^4.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jboe26/Project3.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jboe26/Project3/issues"
+  },
+  "homepage": "https://github.com/jboe26/Project3#readme"
+}
