@@ -5,7 +5,7 @@ function Navbar(){
     return(
         <Container>
         <Navbar expand="lg" variant="light" bg="light">
-          <Navbar.Brand href="#">Navbar</Navbar.Brand>
+          <Navbar.Brand href="#"> WELCOME TO QUIZZLY </Navbar.Brand>
         </Navbar>
       </Container>
     )
