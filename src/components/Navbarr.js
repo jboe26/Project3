@@ -1,7 +1,7 @@
 import React from 'react';
+import {Navbar} from 'react-bootstrap'
 
-
-function Navbar(){
+function Navbarr(){
     return(
         <div>
         <Navbar expand="lg" variant="light" bg="light">
@@ -11,4 +11,4 @@ function Navbar(){
     )
 }
 
-export default Navbar;
+export default Navbarr;

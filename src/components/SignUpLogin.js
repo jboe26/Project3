@@ -1,6 +1,6 @@
 import React from 'react'
-import { Button } from 'react-bootstrap'
-import ButtonToolbar from 'react-bootstrap'
+import { Button, ButtonToolbar } from 'react-bootstrap'
+
 
 function SignUpLogin (){
     return(

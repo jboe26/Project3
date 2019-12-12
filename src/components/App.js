@@ -1,5 +1,5 @@
 import React from 'react'
-import Navbar from './Navbar'
+import Navbarr from './Navbarr'
 import SignUpLogin from './SignUpLogin'
 
 
@@ -7,7 +7,7 @@ function App () {
 
     return(
         <div>
-        <Navbar/>
+        <Navbarr/>
       
       
         <SignUpLogin/>
