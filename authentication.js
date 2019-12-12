@@ -17,6 +17,7 @@ ui.start('#firebaseui-auth-container', {
         provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
         requireDisplayName: false
       }
+   
     ]
   });
 
