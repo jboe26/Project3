@@ -7,6 +7,7 @@
     "firebase": "^7.5.2",
     "firebaseui": "^4.3.0",
     "react": "^16.12.0",
+    "react-bootstrap": "^1.0.0-beta.16",
     "react-dom": "^16.12.0",
     "react-scripts": "^3.3.0"
   },
@@ -24,5 +25,17 @@
   "bugs": {
     "url": "https://github.com/jboe26/Project3/issues"
   },
-  "homepage": "https://github.com/jboe26/Project3#readme"
+  "homepage": "https://github.com/jboe26/Project3#readme",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
 }
