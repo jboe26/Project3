@@ -1,118 +1,81 @@
-var firebase = require('firebase');
-var firebaseui = require('firebaseui');
+var db = require('../models');
+var bcrypt = require('bcrypt');
+const saltRounds = 10;
 
-// Initialize the FirebaseUI Widget using Firebase.
-var ui = new firebaseui.auth.AuthUI(firebase.auth());
-
-ui.start('#firebaseui-auth-container', {
-    signInOptions: [
-      firebase.auth.EmailAuthProvider.PROVIDER_ID
-    ],
-    
+//register: storing name, email and password and redirecting to home page after signup
+app.post('/user/create', function (req, res) {
+  bcrypt.hash(req.body.passwordsignup, saltRounds, function (err,   hash) {
+ db.User.create({
+   name: req.body.usernamesignup,
+   email: req.body.emailsignup,
+   password: hash
+   }).then(function(data) {
+    if (data) {
+    res.redirect('/home');
+    }
   });
+ });
+});
 
-  ui.start('#firebaseui-auth-container', {
-    signInOptions: [
-      {
-        provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
-        requireDisplayName: false
-      }
-   
-    ]
-  });
-
-  ui.start('#firebaseui-auth-container', {
-    signInOptions: [
-      {
-        provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
-        signInMethod: firebase.auth.EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD
-      }
-    ],
-    
-  });
-
-  // Is there an email link sign-in?
-if (ui.isPendingRedirect()) {
-    ui.start('#firebaseui-auth-container', uiConfig);
+//login page: storing and comparing email and password,and redirecting to home page after login
+app.post('/user', function (req, res) {
+  db.User.findOne({
+       where: {
+           email: req.body.email
+              }
+  }).then(function (user) {
+      if (!user) {
+         res.redirect('/');
+      } else {
+bcrypt.compare(req.body.password, user.password, function (err, result) {
+     if (result == true) {
+         res.redirect('/home');
+     } else {
+      res.send('Incorrect password');
+      res.redirect('/');
+     }
+   });
   }
-  // This can also be done via:
-  if ((firebase.auth().isSignInWithEmailLink(window.location.href))) {
-    ui.start('#firebaseui-auth-container', uiConfig);
-  }
+});
+});
 
-  ui.start('#firebaseui-auth-container', {
-    signInOptions: [
-      {
-        provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
-        signInMethod: firebase.auth.EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD,
-        // Allow the user the ability to complete sign-in cross device,
-        // including the mobile apps specified in the ActionCodeSettings
-        // object below.
-        forceSameDevice: false,
-        // Used to define the optional firebase.auth.ActionCodeSettings if
-        // additional state needs to be passed along request and whether to open
-        // the link in a mobile app if it is installed.
-        emailLinkSignIn: function() {
-          return {
-            // Additional state showPromo=1234 can be retrieved from URL on
-            // sign-in completion in signInSuccess callback by checking
-            // window.location.href.
-            url: 'https://www.example.com/completeSignIn?showPromo=1234',
-            // Custom FDL domain.
-            dynamicLinkDomain: 'example.page.link',
-            // Always true for email link sign-in.
-            handleCodeInApp: true,
-            // Whether to handle link in iOS app if installed.
-            iOS: {
-              bundleId: 'com.example.ios'
-            },
-            // Whether to handle link in Android app if opened in an Android
-            // device.
-            android: {
-              packageName: 'com.example.android',
-              installApp: true,
-              minimumVersion: '12'
-            }
-          };
-        }
-      }
-    ]
-  });
-
-
-  // Initialize the FirebaseUI Widget using Firebase.
-var ui = new firebaseui.auth.AuthUI(firebase.auth());
-
-// // <!-- The surrounding HTML is left untouched by FirebaseUI. Your app may use that space for branding, controls and other customizations. -->
-// <h1>Welcome to My Awesome App</h1>
-// <div id="firebaseui-auth-container"></div>
-// <div id="loader">Loading...</div>
-
-var uiConfig = {
-    callbacks: {
-      signInSuccessWithAuthResult: function(authResult, redirectUrl) {
-        // User successfully signed in.
-        // Return type determines whether we continue the redirect automatically
-        // or whether we leave that to developer to handle.
-        return true;
-      },
-      uiShown: function() {
-        // The widget is rendered.
-        // Hide the loader.
-        document.getElementById('loader').style.display = 'none';
-      }
+module.exports = function (sequelize, DataTypes) {
+  var User = sequelize.define("User", {
+    id: {
+      primaryKey: true,
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      autoIncrement: true
     },
-    // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
-    signInFlow: 'popup',
-    signInSuccessUrl: '<url-to-redirect-to-on-success>',
-    
-    // Terms of service url.
-    tosUrl: '<your-tos-url>',
-    // Privacy policy url.
-    privacyPolicyUrl: '<your-privacy-policy-url>'
-  };
+    name: {
+      type: DataTypes.STRING,
+      is: ["^[a-z]+$", 'i'],
+      allowNull: false,
+      required: true
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      isEmail: true,
+      isUnique: true,
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      required: true,
+      len: [2,10]
+    }
+  });
 
-  // The start method will wait until the DOM is loaded.
-ui.start('#firebaseui-auth-container', uiConfig);
 
+// generating a hash
+User.generateHash = function (password) {
+  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+};
 
+// checking if password is valid
+User.prototype.validPassword = function (password) {
+  return bcrypt.hashSync(password, this.localPassword);
+};
+
+}
