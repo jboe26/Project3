@@ -40,7 +40,7 @@ bcrypt.compare(req.body.password, user.password, function (err, result) {
 });
 
 module.exports = function (sequelize, DataTypes) {
-  var User = sequelize.define("User", {
+  var User = sequelize.define("User", { 
     id: {
       primaryKey: true,
       type: DataTypes.INTEGER,
